@@ -66,3 +66,17 @@ export type TranslationNote = {
   body: string;
   tags: string[];
 };
+
+export type SitePage = {
+  slug: string;
+  title: {
+    mn: string;
+    zh: string;
+    en: string;
+  };
+  body: {
+    mn: string;
+    zh: string;
+    en: string;
+  };
+};

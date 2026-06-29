@@ -6,7 +6,7 @@ import {
   texts as fallbackTexts,
   translationNotes as fallbackTranslationNotes
 } from "@/lib/data";
-import type { BookRecord, CategorySlug, TextRecord, TranslationNote } from "@/lib/types";
+import type { BookRecord, CategorySlug, SitePage, TextRecord, TranslationNote } from "@/lib/types";
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -83,6 +83,22 @@ function mapNote(row: any): TranslationNote {
   };
 }
 
+function mapSitePage(row: any): SitePage {
+  return {
+    slug: row.slug,
+    title: {
+      mn: row.title_mn ?? "",
+      zh: row.title_zh ?? "",
+      en: row.title_en ?? ""
+    },
+    body: {
+      mn: row.body_mn ?? "",
+      zh: row.body_zh ?? "",
+      en: row.body_en ?? ""
+    }
+  };
+}
+
 export async function getTexts(): Promise<TextRecord[]> {
   const supabase = getSupabase();
   if (!supabase) return fallbackTexts;
@@ -146,4 +162,18 @@ export async function getTranslationNotes(): Promise<TranslationNote[]> {
 export async function getTranslationNoteBySlug(slug: string): Promise<TranslationNote | undefined> {
   const notes = await getTranslationNotes();
   return notes.find((note) => note.slug === slug);
+}
+
+export async function getSitePage(slug: string): Promise<SitePage | undefined> {
+  const supabase = getSupabase();
+  if (!supabase) return undefined;
+
+  const { data, error } = await supabase
+    .from("site_pages")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error || !data) return undefined;
+  return mapSitePage(data);
 }

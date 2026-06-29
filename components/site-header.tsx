@@ -9,8 +9,8 @@ export function SiteHeader({ locale }: { locale?: string }) {
     { href: "/archive", label: t.archive },
     { href: "/books", label: t.books },
     { href: "/notes", label: t.notes },
-    { href: "/timeline", label: "时间轴" },
-    { href: "/map", label: "地图" },
+    { href: "/timeline", label: t.timeline },
+    { href: "/map", label: t.map },
     { href: "/about", label: t.about },
     { href: "/contact", label: t.contact }
   ];

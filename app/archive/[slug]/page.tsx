@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { TextCard } from "@/components/text-card";
 import { getCitations } from "@/lib/citations";
 import { getCategory } from "@/lib/data";
-import { dictionary, getLocale } from "@/lib/i18n";
+import { categoryLabel, dictionary, getLocale, textTitle } from "@/lib/i18n";
 import { getRelatedTexts, getTextBySlug } from "@/lib/repository";
 
 export default async function TextPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ lang?: string; read?: string }> }) {
@@ -26,8 +26,8 @@ export default async function TextPage({ params, searchParams }: { params: Promi
       <main className={reading ? "mx-auto max-w-4xl px-5 py-10" : "mx-auto max-w-7xl px-5 py-12"}>
         <article className="grid gap-10 lg:grid-cols-[1fr_320px]">
           <div>
-            <div className="text-sm text-gold">{category.zh} · {text.period}</div>
-            <h1 className="mt-3 font-serif text-4xl leading-tight text-archive md:text-6xl">{text.title.zh}</h1>
+            <div className="text-sm text-gold">{categoryLabel(category, lang)} · {text.period}</div>
+            <h1 className="mt-3 font-serif text-4xl leading-tight text-archive md:text-6xl">{textTitle(text, lang)}</h1>
             <div className="mt-3 mongolian-text text-2xl text-steppe">{text.title.mn}</div>
             {!reading ? (
               <div className="mt-6 flex flex-wrap gap-3">
@@ -81,7 +81,7 @@ export default async function TextPage({ params, searchParams }: { params: Promi
           <section className="mt-16">
             <h2 className="font-serif text-3xl text-archive">相关作品推荐</h2>
             <div className="mt-6 grid gap-5 md:grid-cols-3">
-              {(await getRelatedTexts(text.slug)).map((item) => <TextCard key={item.id} text={item} />)}
+              {(await getRelatedTexts(text.slug)).map((item) => <TextCard key={item.id} text={item} locale={lang} />)}
             </div>
           </section>
         ) : null}

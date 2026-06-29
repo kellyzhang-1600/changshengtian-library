@@ -3,7 +3,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TextCard } from "@/components/text-card";
 import { categories } from "@/lib/data";
-import { dictionary, getLocale } from "@/lib/i18n";
+import { categoryLabel, dictionary, getLocale, textTitle } from "@/lib/i18n";
 import { getBooks, getTexts } from "@/lib/repository";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ lang?: string }> }) {
@@ -59,7 +59,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
           </div>
           <div className="grid gap-5 md:grid-cols-2">
             {featured.map((text) => (
-              <TextCard key={text.id} text={text} />
+              <TextCard key={text.id} text={text} locale={lang} />
             ))}
           </div>
         </section>
@@ -69,9 +69,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
             <h2 className="font-serif text-3xl text-archive">{t.categories}</h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {categories.map((category) => (
-                <Link key={category.slug} href={`/archive?category=${category.slug}`} className="border border-archive/10 bg-vellum p-5 hover:border-gold">
+                <Link key={category.slug} href={`/archive?category=${category.slug}&lang=${lang}`} className="border border-archive/10 bg-vellum p-5 hover:border-gold">
                   <div className="mongolian-text text-lg text-steppe">{category.mn}</div>
-                  <div className="mt-3 font-serif text-xl text-archive">{category.zh}</div>
+                  <div className="mt-3 font-serif text-xl text-archive">{categoryLabel(category, lang)}</div>
                   <p className="mt-2 text-sm leading-6 text-muted">{category.description}</p>
                 </Link>
               ))}
@@ -84,8 +84,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
             <h2 className="font-serif text-3xl text-archive">{t.latest}</h2>
             <div className="mt-6 space-y-4">
               {texts.map((text) => (
-                <Link key={text.slug} href={`/archive/${text.slug}`} className="block border-b border-archive/10 pb-4">
-                  <div className="font-serif text-xl text-archive">{text.title.zh}</div>
+                <Link key={text.slug} href={`/archive/${text.slug}?lang=${lang}`} className="block border-b border-archive/10 pb-4">
+                  <div className="font-serif text-xl text-archive">{textTitle(text, lang)}</div>
                   <div className="mt-1 text-sm text-muted">{text.period} · {text.source}</div>
                 </Link>
               ))}

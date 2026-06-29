@@ -41,15 +41,15 @@ export default async function TextPage({ params, searchParams }: { params: Promi
             <section className="mt-10 grid gap-6">
               <div className="border border-archive/12 bg-vellum p-6">
                 <h2 className="font-serif text-2xl text-archive">蒙古文原文</h2>
-                <p className="mt-5 mongolian-text vertical-mn text-2xl text-ink">{text.originalMn}</p>
+                <p className="mt-5 whitespace-pre-line mongolian-text text-2xl text-ink">{text.originalMn}</p>
               </div>
               <div className="border border-archive/12 bg-vellum p-6">
                 <h2 className="font-serif text-2xl text-archive">中文翻译</h2>
-                <p className="reading-prose mt-5 text-ink">{text.translationZh}</p>
+                <p className="reading-prose mt-5 whitespace-pre-line text-ink">{text.translationZh}</p>
               </div>
               <div className="border border-archive/12 bg-vellum p-6">
                 <h2 className="font-serif text-2xl text-archive">English Translation</h2>
-                <p className="mt-5 text-lg leading-9 text-ink">{text.translationEn}</p>
+                <p className="mt-5 whitespace-pre-line text-lg leading-9 text-ink">{text.translationEn}</p>
               </div>
             </section>
           </div>

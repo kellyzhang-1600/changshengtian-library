@@ -49,16 +49,3 @@ a {
   font-family: var(--font-mongolian);
   line-height: 2.2;
 }
-
-.vertical-mn {
-  writing-mode: vertical-lr;
-  text-orientation: sideways;
-  min-height: 320px;
-}
-
-@media (max-width: 760px) {
-  .vertical-mn {
-    writing-mode: horizontal-tb;
-    min-height: auto;
-  }
-}

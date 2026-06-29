@@ -1,10 +1,8 @@
 import { notFound } from "next/navigation";
-import { CitationBox } from "@/components/citation-box";
 import { FavoriteButton } from "@/components/favorite-button";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TextCard } from "@/components/text-card";
-import { getCitations } from "@/lib/citations";
 import { getCategory } from "@/lib/data";
 import { categoryLabel, dictionary, getLocale, textTitle } from "@/lib/i18n";
 import { getRelatedTexts, getTextBySlug } from "@/lib/repository";
@@ -68,10 +66,6 @@ export default async function TextPage({ params, searchParams }: { params: Promi
                 <div className="mt-5 flex flex-wrap gap-2">
                   {text.tags.map((tag) => <span key={tag} className="border border-steppe/30 px-2 py-1 text-xs text-archive">{tag}</span>)}
                 </div>
-              </div>
-              <div>
-                <h2 className="mb-3 font-serif text-2xl text-archive">{t.cite}</h2>
-                <CitationBox citations={getCitations(text)} />
               </div>
             </aside>
           ) : null}

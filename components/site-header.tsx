@@ -20,7 +20,7 @@ export function SiteHeader({ locale }: { locale?: string }) {
       <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
         <Link href="/" className="group flex items-center gap-4">
           <div className="grid h-12 w-12 place-items-center border border-gold/70 bg-archive text-xl font-serif text-vellum shadow-archive">
-            ᠲ
+            М
           </div>
           <div>
             <div className="font-serif text-2xl font-semibold tracking-normal text-archive">长生天文库</div>

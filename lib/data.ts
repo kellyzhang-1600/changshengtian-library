@@ -1,24 +1,24 @@
 import type { BookRecord, CategorySlug, TextRecord, TranslationNote } from "@/lib/types";
 
 export const categories: { slug: CategorySlug; zh: string; en: string; mn: string; description: string }[] = [
-  { slug: "epic", zh: "英雄史诗", en: "Heroic Epics", mn: "ᠪᠠᠭᠠᠲᠤᠷᠯᠢᠭ ᠲᠤᠤᠯᠢ", description: "长篇叙事、英雄谱系与口传传统。" },
-  { slug: "folk-song", zh: "民歌", en: "Folk Songs", mn: "ᠠᠷᠠᠳ ᠤᠨ ᠳᠠᠭᠤᠤ", description: "劳动、迁徙、思念与草原生活。" },
-  { slug: "long-song", zh: "长调", en: "Long Song", mn: "ᠤᠷᠲᠤ ᠶᠢᠨ ᠳᠠᠭᠤᠤ", description: "旋律悠长的蒙古族声乐文学。" },
-  { slug: "blessing", zh: "祝词", en: "Blessings", mn: "ᠢᠷᠦᠭᠡᠯ", description: "仪式、婚礼、祭祀与日常祝颂。" },
-  { slug: "proverb", zh: "谚语", en: "Proverbs", mn: "ᠵᠦᠢᠷ ᠰᠡᠴᠡᠨ ᠦᠭᠡ", description: "短句中的经验、伦理与幽默。" },
-  { slug: "ancient-book", zh: "古籍", en: "Rare Books", mn: "ᠬᠠᠭᠤᠴᠢᠨ ᠨᠣᠮ", description: "旧书、影印本与版本线索。" },
-  { slug: "translation-note", zh: "翻译札记", en: "Translation Notes", mn: "ᠣᠷᠴᠢᠭᠤᠯᠭ᠎ᠠ ᠶᠢᠨ ᠲᠡᠮᠳᠡᠭᠯᠡᠯ", description: "词义、版本、文化背景与译法选择。" }
+  { slug: "epic", zh: "英雄史诗", en: "Heroic Epics", mn: "Баатарлаг тууль", description: "长篇叙事、英雄谱系与口传传统。" },
+  { slug: "folk-song", zh: "民歌", en: "Folk Songs", mn: "Ардын дуу", description: "劳动、迁徙、思念与草原生活。" },
+  { slug: "long-song", zh: "长调", en: "Long Song", mn: "Уртын дуу", description: "旋律悠长的蒙古族声乐文学。" },
+  { slug: "blessing", zh: "祝词", en: "Blessings", mn: "Ерөөл", description: "仪式、婚礼、祭祀与日常祝颂。" },
+  { slug: "proverb", zh: "谚语", en: "Proverbs", mn: "Зүйр үг", description: "短句中的经验、伦理与幽默。" },
+  { slug: "ancient-book", zh: "古籍", en: "Rare Books", mn: "Хуучин ном", description: "旧书、影印本与版本线索。" },
+  { slug: "translation-note", zh: "翻译札记", en: "Translation Notes", mn: "Орчуулгын тэмдэглэл", description: "词义、版本、文化背景与译法选择。" }
 ];
 
 export const texts: TextRecord[] = [
   {
     id: "txt-001",
     slug: "jangar-opening",
-    title: { mn: "ᠵᠠᠩᠭᠠᠷ ᠤᠨ ᠡᠬᠢᠯᠡᠯ", zh: "《江格尔》开篇唱段", en: "Opening of Jangar" },
+    title: { mn: "Жангарын эхлэл", zh: "《江格尔》开篇唱段", en: "Opening of Jangar" },
     category: "epic",
     period: "19世纪口传整理本",
     summary: "英雄史诗《江格尔》的开篇片段，呈现宝木巴故乡、英雄谱系与祝颂式叙事结构。",
-    originalMn: "ᠪᠤᠮᠪᠠ ᠶᠢᠨ ᠣᠷᠣᠨ ᠲᠡᠭᠷᠢ ᠶᠢᠨ ᠬᠠᠶᠠᠭᠠᠨ ᠳᠤ ᠭᠡᠷᠡᠯᠳᠦᠨ᠎ᠡ...",
+    originalMn: "Бумбын орон тэнгэрийн хаяанд гэрэлтэнэ...",
     translationZh: "宝木巴的土地，在长生天的边缘发光。英雄的名字从马蹄声中升起，像清晨的风越过毡房。",
     translationEn: "The land of Bumba glows at the edge of Eternal Heaven. A hero's name rises from hoofbeats, crossing the felt tents like morning wind.",
     source: "乌兰巴托旧书店购得影印本",
@@ -31,7 +31,7 @@ export const texts: TextRecord[] = [
     region: { name: "乌兰巴托", lat: 47.918, lng: 106.917 },
     featured: true,
     todayLine: {
-      mn: "ᠲᠡᠭᠷᠢ ᠶᠢᠨ ᠳᠣᠣᠷ᠎ᠠ ᠨᠡᠷ᠎ᠡ ᠮᠥᠩᠬᠡᠷᠡᠨ᠎ᠡ",
+      mn: "Мөнх тэнгэрийн дор нэр мөнхөрнө",
       zh: "在长生天之下，名字得以长存。",
       en: "Beneath Eternal Heaven, a name endures."
     }
@@ -39,11 +39,11 @@ export const texts: TextRecord[] = [
   {
     id: "txt-002",
     slug: "blue-steppe-song",
-    title: { mn: "ᠬᠥᠬᠡ ᠲᠠᠯ᠎ᠠ ᠶᠢᠨ ᠳᠠᠭᠤᠤ", zh: "蓝色草原之歌", en: "Song of the Blue Steppe" },
+    title: { mn: "Хөх талын дуу", zh: "蓝色草原之歌", en: "Song of the Blue Steppe" },
     category: "folk-song",
     period: "20世纪民歌采录",
     summary: "一首关于离别、牧场与远方亲人的民歌，语言朴素而富有空间感。",
-    originalMn: "ᠬᠥᠬᠡ ᠲᠠᠯ᠎ᠠ ᠮᠢᠨᠢ ᠰᠠᠯᠬᠢᠨ ᠳᠤ ᠨᠠᠮᠢᠷᠠᠨ᠎ᠠ...",
+    originalMn: "Хөх тал минь салхинд намирана...",
     translationZh: "我的蓝色草原在风里起伏，远行的人把思念系在马鞍旁。",
     translationEn: "My blue steppe ripples in the wind; the traveler ties longing beside the saddle.",
     source: "田野录音转写",
@@ -56,7 +56,7 @@ export const texts: TextRecord[] = [
     region: { name: "中央省", lat: 47.5, lng: 106.2 },
     featured: true,
     todayLine: {
-      mn: "ᠰᠠᠯᠬᠢ ᠮᠢᠨᠢ ᠮᠡᠳᠡᠭᠡ ᠠᠪᠴᠤ ᠶᠠᠪᠤ",
+      mn: "Салхи минь, мэдээ авч яваарай",
       zh: "风啊，请替我带去消息。",
       en: "Wind, carry my message onward."
     }
@@ -64,11 +64,11 @@ export const texts: TextRecord[] = [
   {
     id: "txt-003",
     slug: "milk-tea-blessing",
-    title: { mn: "ᠰᠦᠲᠡᠢ ᠴᠠᠢ ᠶᠢᠨ ᠢᠷᠦᠭᠡᠯ", zh: "奶茶祝词", en: "Blessing over Milk Tea" },
+    title: { mn: "Сүүтэй цайны ерөөл", zh: "奶茶祝词", en: "Blessing over Milk Tea" },
     category: "blessing",
     period: "当代仪式口传",
     summary: "围绕奶茶、客人和家庭福祉展开的祝词，适合观察日常礼仪中的诗性表达。",
-    originalMn: "ᠰᠦᠲᠡᠢ ᠴᠠᠢ ᠰᠠᠮᠠᠷᠠᠭᠰᠠᠨ ᠭᠠᠷ ᠪᠤᠶᠠᠨ ᠲᠠᠢ ᠪᠣᠯᠲᠤᠭᠠᠢ...",
+    originalMn: "Сүүтэй цай самарсан гар буянтай болтугай...",
     translationZh: "搅动奶茶的手愿有福泽，迎接客人的门愿有光亮。",
     translationEn: "May the hand that stirs milk tea be blessed; may the door that welcomes guests be bright.",
     source: "家庭仪式记录",
@@ -80,7 +80,7 @@ export const texts: TextRecord[] = [
     places: ["乌兰巴托"],
     region: { name: "乌兰巴托", lat: 47.918, lng: 106.917 },
     todayLine: {
-      mn: "ᠵᠣᠴᠢᠨ ᠤ ᠡᠭᠦᠳᠡ ᠭᠡᠷᠡᠯ ᠲᠡᠢ ᠪᠣᠯᠲᠤᠭᠠᠢ",
+      mn: "Зочны үүд гэрэлтэй болтугай",
       zh: "迎客之门，愿常有光。",
       en: "May the guest door remain bright."
     }

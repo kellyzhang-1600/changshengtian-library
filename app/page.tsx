@@ -7,6 +7,20 @@ import { categories } from "@/lib/data";
 import { categoryLabel, dictionary, getLocale, textTitle } from "@/lib/i18n";
 import { getBooks, getTexts } from "@/lib/repository";
 
+function shortDailyLine(value: string, lang: "zh" | "mn" | "en") {
+  const firstLine = value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .find(Boolean) ?? "";
+  const limit = lang === "en" ? 120 : 42;
+
+  if (firstLine.length <= limit) return firstLine;
+
+  const clipped = firstLine.slice(0, limit);
+  const cleanEnding = lang === "en" ? clipped.replace(/\s+\S*$/, "") : clipped;
+  return `${cleanEnding.trim()}…`;
+}
+
 export default async function Home({ searchParams }: { searchParams: Promise<{ lang?: string }> }) {
   const params = await searchParams;
   const lang = getLocale(params.lang);
@@ -15,6 +29,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
   const books = await getBooks(lang);
   const featured = texts.filter((text) => text.featured);
   const today = texts[new Date().getDate() % texts.length];
+  const todayLine = shortDailyLine(today.todayLine[lang], lang);
 
   return (
     <>
@@ -41,9 +56,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
             </div>
             <aside className="border border-gold/40 bg-parchment p-7 shadow-archive">
               <div className="text-sm uppercase tracking-[0.22em] text-gold">{t.today}</div>
-              <p className="mt-6 mongolian-text text-3xl text-archive">{today.todayLine.mn}</p>
-              <p className="mt-6 font-serif text-xl leading-9 text-ink">{today.todayLine.zh}</p>
-              <p className="mt-2 text-sm leading-7 text-muted">{today.todayLine.en}</p>
+              <p className="mt-6 font-serif text-2xl leading-10 text-archive">{todayLine}</p>
             </aside>
           </div>
         </section>

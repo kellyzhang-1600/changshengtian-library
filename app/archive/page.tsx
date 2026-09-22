@@ -20,9 +20,11 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
       text.title.en,
       text.title.mn,
       text.summary,
+      ...Object.values(text.summaries ?? {}),
       text.period,
       text.source,
       ...text.tags,
+      ...Object.values(text.localizedTags ?? {}).flat(),
       ...text.people,
       ...text.places
     ].join(" ").toLowerCase();
@@ -52,6 +54,8 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
         </aside>
         <section>
           <form className="mb-6">
+            <input type="hidden" name="lang" value={lang} />
+            {activeCategory ? <input type="hidden" name="category" value={activeCategory} /> : null}
             <input
               name="q"
               defaultValue={params.q}
@@ -67,7 +71,7 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter locale={lang} />
     </>
   );
 }

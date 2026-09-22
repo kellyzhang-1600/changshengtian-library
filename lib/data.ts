@@ -1,9 +1,11 @@
-import type { BookRecord, CategorySlug, TextRecord, TranslationNote } from "@/lib/types";
+import type { CategorySlug, TextRecord, TranslationNote } from "@/lib/types";
 
 export const categories: { slug: CategorySlug; zh: string; en: string; mn: string; description: string }[] = [
   { slug: "epic", zh: "英雄史诗", en: "Heroic Epics", mn: "Баатарлаг тууль", description: "长篇叙事、英雄谱系与口传传统。" },
   { slug: "folk-song", zh: "民歌", en: "Folk Songs", mn: "Ардын дуу", description: "劳动、迁徙、思念与草原生活。" },
   { slug: "long-song", zh: "长调", en: "Long Song", mn: "Уртын дуу", description: "旋律悠长的蒙古族声乐文学。" },
+  { slug: "modern-poetry", zh: "现代诗", en: "Modern Poetry", mn: "Орчин үеийн яруу найраг", description: "二十世纪以来的书面诗歌与现代诗歌创作。" },
+  { slug: "ritual-verse", zh: "礼仪交流诗", en: "Ritual Dialogue Verse", mn: "Зан үйлийн харилцаа шүлэг", description: "婚礼、议礼等仪式场合中双方往返吟诵的交流诗。" },
   { slug: "blessing", zh: "祝词", en: "Blessings", mn: "Ерөөл", description: "仪式、婚礼、祭祀与日常祝颂。" },
   { slug: "proverb", zh: "谚语", en: "Proverbs", mn: "Зүйр үг", description: "短句中的经验、伦理与幽默。" },
   { slug: "ancient-book", zh: "古籍", en: "Rare Books", mn: "Хуучин ном", description: "旧书、影印本与版本线索。" },
@@ -84,35 +86,6 @@ export const texts: TextRecord[] = [
       zh: "迎客之门，愿常有光。",
       en: "May the guest door remain bright."
     }
-  }
-];
-
-export const books: BookRecord[] = [
-  {
-    id: "book-001",
-    slug: "ub-jangar-1982",
-    title: "《江格尔》蒙古文影印本",
-    cover: "/book-cover.svg",
-    publishedAt: "1982",
-    publisher: "蒙古国科学院文学研究所",
-    purchasePlace: "乌兰巴托和平大道旧书摊",
-    summary: "书中收录若干史诗唱段，页边有前读者留下的铅笔标记。",
-    whyBought: "这是我第一次在乌兰巴托旧书店遇到带有读者痕迹的《江格尔》版本。",
-    readingNotes: "值得重点核对开篇套语、地名音译和英雄谱系段落。",
-    relatedTextSlugs: ["jangar-opening"]
-  },
-  {
-    id: "book-002",
-    slug: "folk-song-collection",
-    title: "蒙古民歌小辑",
-    cover: "/book-cover.svg",
-    publishedAt: "1976",
-    publisher: "国家出版社",
-    purchasePlace: "乌兰巴托大学区旧书店",
-    summary: "薄册，收民歌歌词与简谱，适合与田野录音做版本比较。",
-    whyBought: "其中几首歌与我在牧区听到的版本存在细微差异。",
-    readingNotes: "可建立“同题异文”索引，记录每个版本的词句变化。",
-    relatedTextSlugs: ["blue-steppe-song"]
   }
 ];
 

@@ -4,6 +4,8 @@ export type CategorySlug =
   | "epic"
   | "folk-song"
   | "long-song"
+  | "modern-poetry"
+  | "ritual-verse"
   | "blessing"
   | "proverb"
   | "ancient-book"
@@ -20,6 +22,7 @@ export type TextRecord = {
   category: CategorySlug;
   period: string;
   summary: string;
+  summaries?: Partial<Record<Locale, string>>;
   originalMn: string;
   translationZh: string;
   translationEn: string;
@@ -27,7 +30,9 @@ export type TextRecord = {
   publication: string;
   pages: string;
   translationNote: string;
+  translationNotes?: Partial<Record<Locale, string>>;
   tags: string[];
+  localizedTags?: Partial<Record<Locale, string[]>>;
   people: string[];
   places: string[];
   region?: {
@@ -51,6 +56,9 @@ export type BookRecord = {
   publishedAt: string;
   publisher: string;
   purchasePlace: string;
+  institution?: string;
+  credits?: string;
+  publicationPlace?: string;
   summary: string;
   whyBought: string;
   readingNotes: string;

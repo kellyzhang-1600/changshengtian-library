@@ -1,12 +1,12 @@
+import { catalogBooks } from "@/lib/book-catalog";
 import { createClient } from "@supabase/supabase-js";
 import {
-  books as fallbackBooks,
   findText as findFallbackText,
   relatedTexts as fallbackRelatedTexts,
   texts as fallbackTexts,
   translationNotes as fallbackTranslationNotes
 } from "@/lib/data";
-import type { BookRecord, CategorySlug, SitePage, TextRecord, TranslationNote } from "@/lib/types";
+import type { BookRecord, Locale, CategorySlug, SitePage, TextRecord, TranslationNote } from "@/lib/types";
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -17,7 +17,7 @@ function getSupabase() {
 }
 
 function normalizeCategory(value?: string | null): CategorySlug {
-  const allowed: CategorySlug[] = ["epic", "folk-song", "long-song", "blessing", "proverb", "ancient-book", "translation-note"];
+  const allowed: CategorySlug[] = ["epic", "folk-song", "long-song", "modern-poetry", "ritual-verse", "blessing", "proverb", "ancient-book", "translation-note"];
   return allowed.includes(value as CategorySlug) ? (value as CategorySlug) : "epic";
 }
 
@@ -35,6 +35,7 @@ function mapText(row: any): TextRecord {
     category: normalizeCategory(categorySlug),
     period: row.period ?? "",
     summary: row.summary ?? "",
+    summaries: { zh: row.summary ?? "", en: row.summary_en ?? "", mn: row.summary_mn ?? "" },
     originalMn: row.original_mn ?? "",
     translationZh: row.translation_zh ?? "",
     translationEn: row.translation_en ?? "",
@@ -42,7 +43,9 @@ function mapText(row: any): TextRecord {
     publication: row.publication ?? "",
     pages: row.pages ?? "",
     translationNote: row.translation_note ?? "",
+    translationNotes: { zh: row.translation_note_zh ?? "", en: row.translation_note_en ?? "", mn: row.translation_note_mn ?? "" },
     tags: row.themes ?? [],
+    localizedTags: { zh: row.themes ?? [], en: row.themes_en ?? [], mn: row.themes_mn ?? [] },
     people: row.people ?? [],
     places: row.places ?? [],
     region: row.latitude && row.longitude ? { name: row.region_name ?? "", lat: Number(row.latitude), lng: Number(row.longitude) } : undefined,
@@ -55,19 +58,16 @@ function mapText(row: any): TextRecord {
   };
 }
 
-function mapBook(row: any): BookRecord {
+function mapBook(row: any, locale: Locale): BookRecord {
+  const metadata = row.localized_metadata?.[locale] ?? {};
   return {
-    id: row.id,
-    slug: row.slug,
-    title: row.title ?? "",
-    cover: row.cover_url || "/book-cover.svg",
-    publishedAt: row.published_at ?? "",
-    publisher: row.publisher ?? "",
-    purchasePlace: row.purchase_place ?? "",
-    summary: row.summary ?? "",
-    whyBought: row.why_bought ?? "",
-    readingNotes: row.reading_notes ?? "",
-    relatedTextSlugs: row.related_text_slugs ?? []
+    id: row.id, slug: row.slug, publishedAt: row.published_at ?? "",
+    title: metadata.title ?? (locale === "zh" ? row.title : ""),
+    cover: row.cover_url ?? "",
+    publisher: metadata.publisher ?? "", publicationPlace: metadata.publicationPlace ?? "",
+    institution: metadata.institution ?? "", credits: metadata.credits ?? "",
+    summary: metadata.summary ?? "", purchasePlace: "", whyBought: "", readingNotes: "",
+    relatedTextSlugs: (row.book_texts ?? []).flatMap((link: any) => link.texts?.slug ? [link.texts.slug] : [])
   };
 }
 
@@ -136,18 +136,17 @@ export async function getRelatedTexts(slug: string): Promise<TextRecord[]> {
     .slice(0, 3);
 }
 
-export async function getBooks(): Promise<BookRecord[]> {
+export async function getBooks(locale: Locale = "zh"): Promise<BookRecord[]> {
   const supabase = getSupabase();
-  if (!supabase) return fallbackBooks;
-
-  const { data, error } = await supabase.from("books").select("*").order("created_at", { ascending: false });
-  if (error || !data?.length) return fallbackBooks;
-  return data.map(mapBook);
+  if (!supabase) return catalogBooks(locale);
+  const { data, error } = await supabase.from("books").select("*, book_texts(texts(slug))").order("published_at", { ascending: true });
+  if (error) throw new Error("Unable to load the book archive");
+  return (data ?? []).map(row => mapBook(row, locale));
 }
 
-export async function getBookBySlug(slug: string): Promise<BookRecord | undefined> {
-  const books = await getBooks();
-  return books.find((book) => book.slug === slug);
+export async function getBookBySlug(slug: string, locale: Locale = "zh"): Promise<BookRecord | undefined> {
+  const books = await getBooks(locale);
+  return books.find(book => book.slug === slug);
 }
 
 export async function getTranslationNotes(): Promise<TranslationNote[]> {

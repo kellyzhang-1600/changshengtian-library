@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { dictionary, getLocale, textTitle } from "@/lib/i18n";
+import { dictionary, getLocale, textTitle, textSummary, textTags, textPeriod } from "@/lib/i18n";
 import { getTexts } from "@/lib/repository";
 
 export default async function TimelinePage({ searchParams }: { searchParams: Promise<{ lang?: string }> }) {
@@ -19,14 +19,14 @@ export default async function TimelinePage({ searchParams }: { searchParams: Pro
           {texts.map((text) => (
             <Link key={text.slug} href={`/archive/${text.slug}?lang=${lang}`} className="relative mb-8 block border border-archive/12 bg-vellum p-5 hover:border-gold">
               <span className="absolute -left-[33px] top-6 h-3 w-3 rounded-full bg-gold" />
-              <div className="text-sm text-gold">{text.period}</div>
+              {textPeriod(text, lang) ? <div className="text-sm text-gold">{textPeriod(text, lang)}</div> : null}
               <div className="mt-2 font-serif text-2xl text-archive">{textTitle(text, lang)}</div>
-              <p className="mt-2 text-sm leading-7 text-muted">{text.summary}</p>
+              <p className="mt-2 text-sm leading-7 text-muted">{textSummary(text, lang)}</p>
             </Link>
           ))}
         </div>
       </main>
-      <SiteFooter />
+      <SiteFooter locale={lang} />
     </>
   );
 }

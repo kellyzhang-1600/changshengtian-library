@@ -1,54 +1,47 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getBookBySlug, getTextBySlug } from "@/lib/repository";
+import { dictionary, getLocale, textTitle } from "@/lib/i18n";
+import { getBookBySlug, getTexts } from "@/lib/repository";
 
-export default async function BookPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const book = await getBookBySlug(slug);
+export default async function BookPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ lang?: string }> }) {
+  const [{ slug }, query] = await Promise.all([params, searchParams]);
+  const lang = getLocale(query.lang);
+  const t = dictionary[lang];
+  const book = await getBookBySlug(slug, lang);
   if (!book) notFound();
-  const related = (await Promise.all(book.relatedTextSlugs.map(getTextBySlug))).filter(Boolean);
-
+  const relatedSlugs = new Set(book.relatedTextSlugs);
+  const related = relatedSlugs.size ? (await getTexts()).filter(text => relatedSlugs.has(text.slug)) : [];
   return (
     <>
-      <SiteHeader />
-      <main className="mx-auto grid max-w-6xl gap-10 px-5 py-12 lg:grid-cols-[300px_1fr]">
-        <Image src={book.cover} alt="" width={300} height={400} className="border border-archive/12 bg-vellum shadow-archive" />
+      <SiteHeader locale={lang} />
+      <main className="mx-auto max-w-5xl px-5 py-12">
         <article>
-          <div className="text-sm text-gold">{book.publishedAt} · {book.publisher}</div>
-          <h1 className="mt-3 font-serif text-5xl text-archive">{book.title}</h1>
-          <dl className="mt-8 grid gap-5 border-y border-archive/10 py-6 text-sm md:grid-cols-2">
-            <div><dt className="text-gold">出版时间</dt><dd className="mt-1 text-ink">{book.publishedAt}</dd></div>
-            <div><dt className="text-gold">出版社</dt><dd className="mt-1 text-ink">{book.publisher}</dd></div>
-            <div><dt className="text-gold">购买地点</dt><dd className="mt-1 text-ink">{book.purchasePlace}</dd></div>
+          {[book.publishedAt, book.publisher].filter(Boolean).length ? <div className="text-sm text-gold">{[book.publishedAt, book.publisher].filter(Boolean).join(" · ")}</div> : null}
+          <h1 className="mt-3 font-serif text-4xl leading-tight text-archive md:text-5xl">{book.title}</h1>
+          <dl className="mt-8 space-y-5 border-y border-archive/10 py-6 text-sm leading-7">
+            <div><dt className="text-gold">{t.institutionLabel}</dt><dd className="mt-1 text-ink">{book.institution}</dd></div>
+            {book.credits ? <div><dt className="text-gold">{t.creditsLabel}</dt><dd className="mt-1 text-ink">{book.credits}</dd></div> : null}
+            {[book.publisher, book.publicationPlace, book.publishedAt].filter(Boolean).length ? <div><dt className="text-gold">{t.publicationLabel}</dt><dd className="mt-1 text-ink">{[book.publisher, book.publicationPlace, book.publishedAt].filter(Boolean).join(" · ")}</dd></div> : null}
           </dl>
-          <Section title="内容简介" body={book.summary} />
-          <Section title="我为什么购买它" body={book.whyBought} />
-          <Section title="阅读札记" body={book.readingNotes} />
           <section className="mt-8">
-            <h2 className="font-serif text-2xl text-archive">相关作品</h2>
+            <h2 className="font-serif text-2xl text-archive">{t.bookIntro}</h2>
+            <p className="reading-prose mt-3 text-ink">{book.summary}</p>
+          </section>
+          <section className="mt-8">
+            <h2 className="font-serif text-2xl text-archive">{t.relatedWorks}</h2>
             <div className="mt-4 space-y-3">
-              {related.map((text) => text ? (
-                <Link key={text.slug} href={`/archive/${text.slug}`} className="block border border-archive/10 bg-vellum p-4 hover:border-gold">
-                  {text.title.zh}
+              {related.length ? related.map(text => (
+                <Link key={text.slug} href={`/archive/${text.slug}?lang=${lang}`} className="block border border-archive/10 bg-vellum p-4 hover:border-gold">
+                  {textTitle(text, lang)}
                 </Link>
-              ) : null)}
+              )) : <p className="text-sm text-muted">{t.noRelated}</p>}
             </div>
           </section>
         </article>
       </main>
-      <SiteFooter />
+      <SiteFooter locale={lang} />
     </>
-  );
-}
-
-function Section({ title, body }: { title: string; body: string }) {
-  return (
-    <section className="mt-8">
-      <h2 className="font-serif text-2xl text-archive">{title}</h2>
-      <p className="mt-3 reading-prose text-ink">{body}</p>
-    </section>
   );
 }

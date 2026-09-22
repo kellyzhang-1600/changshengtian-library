@@ -1,3 +1,4 @@
+import { workSource } from "@/lib/work-sources";
 import Link from "next/link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -11,7 +12,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
   const lang = getLocale(params.lang);
   const t = dictionary[lang];
   const texts = await getTexts();
-  const books = await getBooks();
+  const books = await getBooks(lang);
   const featured = texts.filter((text) => text.featured);
   const today = texts[new Date().getDate() % texts.length];
 
@@ -23,18 +24,18 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
           <div className="ornament absolute inset-x-0 top-0 h-8 opacity-40" />
           <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
             <div>
-              <p className="text-sm uppercase tracking-[0.32em] text-gold">Public Digital Humanities Archive</p>
-              <h1 className="mt-5 font-serif text-5xl font-semibold leading-tight text-archive md:text-7xl">长生天文库</h1>
+              <p className="text-sm uppercase tracking-[0.32em] text-gold">{t.publicArchive}</p>
+              <h1 className="mt-5 font-serif text-5xl font-semibold leading-tight text-archive md:text-7xl">{t.brand}</h1>
               <p className="mt-5 max-w-3xl font-serif text-2xl leading-10 text-cedar">{t.subtitle}</p>
               <p className="mt-8 max-w-3xl text-base leading-8 text-muted">
-                这里收藏蒙古英雄史诗、民歌、祝词、谚语与旧书资料，也记录翻译过程中无法被轻易带过的词语、版本和文化背景。它首先是一间安静的数字阅览室，其次才是一个网站。
+                {t.aboutFallback1}
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/archive" className="bg-archive px-5 py-3 text-sm font-medium text-vellum hover:bg-cedar">
-                  进入文库
+                <Link href={`/archive?lang=${lang}`} className="bg-archive px-5 py-3 text-sm font-medium text-vellum hover:bg-cedar">
+                  {t.enterArchive}
                 </Link>
-                <Link href="/about" className="border border-archive/20 px-5 py-3 text-sm font-medium text-archive hover:bg-archive/5">
-                  了解项目
+                <Link href={`/about?lang=${lang}`} className="border border-archive/20 px-5 py-3 text-sm font-medium text-archive hover:bg-archive/5">
+                  {t.learnProject}
                 </Link>
               </div>
             </div>
@@ -51,10 +52,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
               <h2 className="font-serif text-3xl text-archive">{t.featured}</h2>
-              <p className="mt-2 text-sm text-muted">适合从这里开始阅读的馆藏作品。</p>
+              <p className="mt-2 text-sm text-muted">{t.featuredIntro}</p>
             </div>
-            <Link href="/archive" className="text-sm text-archive underline decoration-gold underline-offset-4">
-              查看全部
+            <Link href={`/archive?lang=${lang}`} className="text-sm text-archive underline decoration-gold underline-offset-4">
+              {t.allWorks}
             </Link>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
@@ -70,9 +71,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {categories.map((category) => (
                 <Link key={category.slug} href={`/archive?category=${category.slug}&lang=${lang}`} className="border border-archive/10 bg-vellum p-5 hover:border-gold">
-                  <div className="mongolian-text text-lg text-steppe">{category.mn}</div>
                   <div className="mt-3 font-serif text-xl text-archive">{categoryLabel(category, lang)}</div>
-                  <p className="mt-2 text-sm leading-6 text-muted">{category.description}</p>
+                  <p className="mt-2 text-sm leading-6 text-muted">{lang === "zh" ? category.description : categoryDescriptions[lang][category.slug]}</p>
                 </Link>
               ))}
             </div>
@@ -86,18 +86,18 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
               {texts.map((text) => (
                 <Link key={text.slug} href={`/archive/${text.slug}?lang=${lang}`} className="block border-b border-archive/10 pb-4">
                   <div className="font-serif text-xl text-archive">{textTitle(text, lang)}</div>
-                  <div className="mt-1 text-sm text-muted">{text.period} · {text.source}</div>
+                  <div className="mt-1 text-sm text-muted">{workSource(text.slug, lang)?.title ?? ""}</div>
                 </Link>
               ))}
             </div>
           </div>
           <div>
-            <h2 className="font-serif text-3xl text-archive">乌兰巴托旧书店档案</h2>
+            <h2 className="font-serif text-3xl text-archive">{t.books}</h2>
             <div className="mt-6 space-y-4">
               {books.map((book) => (
-                <Link key={book.slug} href={`/books/${book.slug}`} className="block border border-archive/10 bg-vellum p-5 hover:border-gold">
+                <Link key={book.slug} href={`/books/${book.slug}?lang=${lang}`} className="block border border-archive/10 bg-vellum p-5 hover:border-gold">
                   <div className="font-serif text-xl text-archive">{book.title}</div>
-                  <p className="mt-2 text-sm leading-6 text-muted">{book.whyBought}</p>
+                  <p className="mt-2 text-sm leading-6 text-muted">{book.summary}</p>
                 </Link>
               ))}
             </div>
@@ -108,12 +108,37 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
           <div className="border-y border-archive/10 py-10">
             <h2 className="font-serif text-3xl text-archive">{t.project}</h2>
             <p className="mt-4 max-w-4xl text-base leading-8 text-muted">
-              项目将持续整理田野调查、旧书店购书、版本比较和翻译札记。后台支持长期增补作品、书籍、关键词、图片、PDF 与读者建议审核，不需要每次修改代码。
+              {t.aboutFallback3}
             </p>
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter locale={lang} />
     </>
   );
 }
+
+const categoryDescriptions = {
+  "en": {
+    "epic": "Long narratives, heroic lineages, and oral traditions.",
+    "folk-song": "Labor, migration, longing, and life on the steppe.",
+    "long-song": "Mongolian vocal literature with long, sustained melodies.",
+    "modern-poetry": "Written and modern poetry from the twentieth century onward.",
+    "ritual-verse": "Reciprocal verse performed during weddings and other customary negotiations.",
+    "blessing": "Rituals, weddings, offerings, and everyday good wishes.",
+    "proverb": "Experience, ethics, and humor in concise sayings.",
+    "ancient-book": "Old books, facsimiles, and textual versions.",
+    "translation-note": "Word meanings, versions, cultural context, and translation choices."
+  },
+  "mn": {
+    "epic": "Урт хүүрнэл, баатрын угсаа, аман уламжлал.",
+    "folk-song": "Хөдөлмөр, нүүдэл, санагалзал, тал нутгийн амьдрал.",
+    "long-song": "Уянга сунжирсан аялгуутай монгол дууны яруу найраг.",
+    "modern-poetry": "Хорьдугаар зуунаас хойших бичгийн болон орчин үеийн яруу найраг.",
+    "ritual-verse": "Хурим болон ёс хэлэлцэх үед хоёр тал ээлжлэн хэлдэг харилцаа шүлэг.",
+    "blessing": "Зан үйл, хурим, тахилга, өдөр тутмын ерөөл.",
+    "proverb": "Товч үгэнд шингэсэн туршлага, ёс суртахуун, хошигнол.",
+    "ancient-book": "Хуучин ном, хуулбар хэвлэл, эхийн хувилбар.",
+    "translation-note": "Үгийн утга, хувилбар, соёлын тайлбар, орчуулгын сонголт."
+  }
+};
